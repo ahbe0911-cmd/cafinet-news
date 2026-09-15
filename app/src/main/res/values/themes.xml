@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.CafinetNews" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.CafinetNews.Splash" parent="Theme.CafinetNews">
+        <item name="android:windowBackground">@color/splash_background</item>
+        <item name="android:statusBarColor">@color/splash_background</item>
+    </style>
+</resources>

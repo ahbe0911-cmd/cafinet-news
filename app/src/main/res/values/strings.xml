@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">اخبار کافی‌نت</string>
+    <string name="home">خانه</string>
+    <string name="settings">تنظیمات</string>
+    <string name="search_hint">جستجو در اخبار…</string>
+    <string name="all_categories">همه</string>
+    <string name="share">اشتراک‌گذاری</string>
+    <string name="theme_light">روشن</string>
+    <string name="theme_dark">تیره</string>
+    <string name="theme_system">سیستم</string>
+    <string name="font_family">قلم</string>
+    <string name="text_size">اندازه متن</string>
+    <string name="text_size_small">کوچک</string>
+    <string name="text_size_medium">متوسط</string>
+    <string name="text_size_large">بزرگ</string>
+</resources>

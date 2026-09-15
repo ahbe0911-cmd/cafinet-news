@@ -1,0 +1,47 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Run Kotlin lint / static checks
+        run: ./gradlew lint --continue
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Assemble debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload debug APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk
+
+  # NOTE: no signing/release keys or secrets are referenced in this workflow.
+  # Add a separate "release" job with secrets.* references (Play signing,
+  # backend API keys, etc.) only in encrypted GitHub Actions secrets - never
+  # commit them to the repository.
