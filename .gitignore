@@ -9,6 +9,7 @@
 .cxx
 *.apk
 *.aab
+*-artifact.zip
 local.properties
 
 # Never commit secrets

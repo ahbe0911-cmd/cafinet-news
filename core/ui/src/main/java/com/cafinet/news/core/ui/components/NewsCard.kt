@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayCircle
+import androidx.compose.material.icons.outlined.Forum
 import androidx.compose.material.icons.outlined.RemoveRedEye
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,6 +29,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
 import coil.compose.AsyncImage
 import com.cafinet.news.core.ui.theme.AppSpacing
 import com.cafinet.news.core.ui.theme.NewsCardRadius
@@ -50,22 +53,39 @@ fun NewsCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
-        Box {
-            AsyncImage(
-                model = news.imageUrl,
-                contentDescription = news.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 10f)
-                    .clip(RoundedCornerShape(topStart = NewsCardRadius, topEnd = NewsCardRadius)),
-                contentScale = ContentScale.Crop,
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 10f)
+                .clip(RoundedCornerShape(topStart = NewsCardRadius, topEnd = NewsCardRadius)),
+        ) {
+            if (news.imageUrl.isNotBlank()) {
+                AsyncImage(
+                    model = news.imageUrl,
+                    contentDescription = news.title,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Forum,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                        modifier = Modifier.size(52.dp),
+                    )
+                }
+            }
 
             // Gradient scrim so category chip / play icon stay legible over any photo
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 10f)
+                    .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.35f)),
@@ -109,13 +129,15 @@ fun NewsCard(
                 maxLines = 2,
             )
 
-            Text(
-                text = news.description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 2,
-                modifier = Modifier.padding(top = AppSpacing.xs),
-            )
+            if (news.description.isNotBlank()) {
+                Text(
+                    text = news.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    modifier = Modifier.padding(top = AppSpacing.xs),
+                )
+            }
 
             Row(
                 modifier = Modifier
@@ -134,22 +156,24 @@ fun NewsCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
-                Row(
-                    modifier = Modifier.weight(1f),
-                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.RemoveRedEye,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(end = AppSpacing.xs),
-                    )
-                    Text(
-                        text = news.viewCount.toString(),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                if (news.viewCount > 0) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.RemoveRedEye,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(end = AppSpacing.xs),
+                        )
+                        Text(
+                            text = news.viewCount.toString(),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
         }

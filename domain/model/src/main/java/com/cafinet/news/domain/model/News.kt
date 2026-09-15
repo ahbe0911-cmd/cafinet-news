@@ -7,6 +7,8 @@ package com.cafinet.news.domain.model
  */
 data class News(
     val id: Long,
+    val telegramMessageId: Long,
+    val channelUsername: String,
     val title: String,
     val description: String,
     val imageUrl: String,
@@ -14,7 +16,9 @@ data class News(
     val category: String,
     val source: String,
     val publishedAt: String,
+    val publishedAtEpochMillis: Long,
     val viewCount: Int = 0,
+    val postUrl: String,
 )
 
 /** Lightweight category used for the horizontal filter chips on the Home feed. */

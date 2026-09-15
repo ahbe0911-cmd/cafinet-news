@@ -1,6 +1,7 @@
 package com.cafinet.news.ui.detail
 
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,9 +12,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +59,12 @@ fun NewsDetailScreen(
                         IconButton(onClick = {
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
-                                putExtra(Intent.EXTRA_TEXT, "${news.title}\n\n${news.description}")
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    listOf(news.title, news.description, news.postUrl)
+                                        .filter { it.isNotBlank() }
+                                        .joinToString("\n\n"),
+                                )
                             }
                             context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.share)))
                         }) {
@@ -87,7 +95,7 @@ fun NewsDetailScreen(
                     val videoUrl = news.videoUrl
                     if (!videoUrl.isNullOrBlank()) {
                         VideoPlayer(videoUrl = videoUrl)
-                    } else {
+                    } else if (news.imageUrl.isNotBlank()) {
                         AsyncImage(
                             model = news.imageUrl,
                             contentDescription = news.title,
@@ -110,12 +118,29 @@ fun NewsDetailScreen(
                             modifier = Modifier.padding(top = AppSpacing.sm),
                         )
 
-                        Text(
-                            text = news.description,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.padding(top = AppSpacing.lg),
-                        )
+                        if (news.description.isNotBlank()) {
+                            Text(
+                                text = news.description,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.padding(top = AppSpacing.lg),
+                            )
+                        }
+
+                        FilledTonalButton(
+                            onClick = {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(news.postUrl)))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = AppSpacing.xl),
+                        ) {
+                            Icon(Icons.Filled.OpenInNew, contentDescription = null)
+                            Text(
+                                text = stringResourceCompat(R.string.open_in_telegram),
+                                modifier = Modifier.padding(start = AppSpacing.sm),
+                            )
+                        }
                     }
                 }
             }

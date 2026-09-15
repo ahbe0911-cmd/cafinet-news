@@ -1,25 +1,17 @@
 package com.cafinet.news.data.api.dto
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-/**
- * Raw API response shape for GET /api/news.
- * Matches the JSON contract agreed with the future Telegram-based backend:
- * {
- *   "id": 1, "title": "...", "description": "...", "imageUrl": "...",
- *   "videoUrl": "...", "category": "...", "source": "...", "publishedAt": "1405/06/25"
- * }
- */
-@Serializable
 data class NewsDto(
-    @SerialName("id") val id: Long,
-    @SerialName("title") val title: String,
-    @SerialName("description") val description: String = "",
-    @SerialName("imageUrl") val imageUrl: String = "",
-    @SerialName("videoUrl") val videoUrl: String? = null,
-    @SerialName("category") val category: String = "",
-    @SerialName("source") val source: String = "کافی‌نت",
-    @SerialName("publishedAt") val publishedAt: String = "",
-    @SerialName("viewCount") val viewCount: Int = 0,
+    val id: Long,
+    val telegramMessageId: Long,
+    val channelUsername: String,
+    val title: String,
+    val description: String = "",
+    val imageUrl: String = "",
+    val videoUrl: String? = null,
+    val category: String = "",
+    val source: String,
+    val publishedAt: String = "",
+    val publishedAtEpochMillis: Long = 0L,
+    val viewCount: Int = 0,
+    val postUrl: String,
 )

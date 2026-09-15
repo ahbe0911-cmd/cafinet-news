@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.cafinet.news.domain.usecase.RefreshNewsUseCase
+import com.cafinet.news.core.common.PartialTelegramFetchException
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import com.cafinet.news.core.common.Result as AppResult
@@ -23,9 +24,13 @@ class NewsSyncWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): ListenableWorker.Result {
-        return when (refreshNewsUseCase()) {
+        return when (val result = refreshNewsUseCase()) {
             is AppResult.Success -> ListenableWorker.Result.success()
-            is AppResult.Error -> ListenableWorker.Result.retry()
+            is AppResult.Error -> if (result.throwable is PartialTelegramFetchException) {
+                ListenableWorker.Result.success()
+            } else {
+                ListenableWorker.Result.retry()
+            }
             AppResult.Loading -> ListenableWorker.Result.retry()
         }
     }
