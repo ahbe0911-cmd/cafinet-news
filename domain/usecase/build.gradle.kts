@@ -26,4 +26,5 @@ dependencies {
     implementation(project(":domain:repository"))
     implementation(project(":core:common"))
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.javax.inject)
 }
