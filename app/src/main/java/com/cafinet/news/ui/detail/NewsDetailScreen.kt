@@ -84,8 +84,9 @@ fun NewsDetailScreen(
                         .padding(paddingValues)
                         .verticalScroll(rememberScrollState()),
                 ) {
-                    if (!news.videoUrl.isNullOrBlank()) {
-                        VideoPlayer(videoUrl = news.videoUrl)
+                    val videoUrl = news.videoUrl
+                    if (!videoUrl.isNullOrBlank()) {
+                        VideoPlayer(videoUrl = videoUrl)
                     } else {
                         AsyncImage(
                             model = news.imageUrl,
